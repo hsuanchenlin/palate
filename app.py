@@ -18,7 +18,7 @@ with st.sidebar:
     backend_choice = st.radio("LLM", ["OpenRouter", "Ollama"], index=0)
 
     if backend_choice == "OpenRouter":
-        default_model = os.environ.get("OPENROUTER_MODEL", "google/gemma-3-27b-it:free")
+        default_model = os.environ.get("OPENROUTER_MODEL", "meta-llama/llama-3.3-70b-instruct:free")
         model = st.text_input("Model", value=default_model)
         api_key_set = bool(os.environ.get("OPENROUTER_API_KEY"))
         st.caption("OPENROUTER_API_KEY: " + ("✅ set" if api_key_set else "❌ missing — set in .env"))

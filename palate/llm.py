@@ -25,7 +25,7 @@ class Backend(Protocol):
 class OpenRouterBackend:
     name = "openrouter"
 
-    def __init__(self, model: str = "google/gemma-3-27b-it:free", api_key: str | None = None):
+    def __init__(self, model: str = "meta-llama/llama-3.3-70b-instruct:free", api_key: str | None = None):
         self.model = model
         self.client = OpenAI(
             base_url="https://openrouter.ai/api/v1",

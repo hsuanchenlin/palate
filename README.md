@@ -33,6 +33,13 @@ ollama pull gemma3:4b   # or gemma3:12b / gemma3:27b if you have the VRAM
 uv run streamlit run app.py
 ```
 
+## Notes on the default OpenRouter model
+
+`google/gemma-3-27b-it:free` does **not** support tool calling on OpenRouter, so the default
+is `meta-llama/llama-3.3-70b-instruct:free`. Other tool-capable `:free` options: `google/gemma-4-26b-a4b-it:free`,
+`openai/gpt-oss-120b:free`, `qwen/qwen3-next-80b-a3b-instruct:free`, `nvidia/nemotron-nano-9b-v2:free`.
+Free-tier providers are often rate-limited; retry or swap models. For reliability, use the Ollama backend.
+
 ## Example prompts
 
 - `台北大安區推薦的牛肉麵，評分 4.3 以上`

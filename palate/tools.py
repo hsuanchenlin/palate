@@ -25,6 +25,18 @@ def _api_key() -> str:
     return key
 
 
+def _check(r: httpx.Response) -> None:
+    if r.is_success:
+        return
+    try:
+        err = r.json().get("error", {})
+        msg = err.get("message") or r.text
+        status = err.get("status") or r.status_code
+    except Exception:
+        msg, status = r.text, r.status_code
+    raise RuntimeError(f"Google Places {status}: {msg}")
+
+
 def search_restaurants(
     query: str,
     region: str = "Taiwan",
@@ -51,7 +63,7 @@ def search_restaurants(
         "X-Goog-FieldMask": SEARCH_FIELDS,
     }
     r = httpx.post(f"{PLACES_BASE}/places:searchText", json=body, headers=headers, timeout=20)
-    r.raise_for_status()
+    _check(r)
     data = r.json()
     return {"results": [_format_place(p) for p in data.get("places", [])]}
 
@@ -64,7 +76,7 @@ def get_restaurant_details(place_id: str) -> dict:
     }
     params = {"languageCode": "zh-TW"}
     r = httpx.get(f"{PLACES_BASE}/places/{place_id}", headers=headers, params=params, timeout=20)
-    r.raise_for_status()
+    _check(r)
     return _format_details(r.json())
 
 
