@@ -17,8 +17,10 @@ Tool usage:
   better matches for local spots).
 - Call `get_restaurant_details` when the user asks about a specific place, wants reviews,
   hours, or a phone number — use the place_id from the prior search.
-- Prefer citing rating, review count, and a short excerpt from a review. Include the Google
-  Maps link when available.
+- For every restaurant you mention, include its Google Maps link as a Markdown link on the
+  name, e.g. `[鼎泰豐](https://maps.google.com/...)`. The `maps_url` field is present on every
+  search result — never omit it, and never invent one.
+- Prefer citing rating, review count, and a short excerpt from a review when you have one.
 - If results are empty or low quality, broaden the query (drop area, try English/Chinese) and
   try again before apologizing.
 

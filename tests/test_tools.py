@@ -20,6 +20,7 @@ def test_format_place_happy_path():
         "priceLevel": "PRICE_LEVEL_MODERATE",
         "primaryType": "chinese_restaurant",
         "currentOpeningHours": {"openNow": True},
+        "googleMapsUri": "https://maps.google.com/?cid=123",
         "location": {"latitude": 25.03, "longitude": 121.56},
     }
     assert tools._format_place(raw) == {
@@ -31,6 +32,7 @@ def test_format_place_happy_path():
         "price_level": "PRICE_LEVEL_MODERATE",
         "type": "chinese_restaurant",
         "open_now": True,
+        "maps_url": "https://maps.google.com/?cid=123",
         "location": {"latitude": 25.03, "longitude": 121.56},
     }
 
@@ -42,6 +44,7 @@ def test_format_place_missing_fields_are_none():
     assert out["name"] == "無名小店"
     assert out["rating"] is None
     assert out["open_now"] is None
+    assert out["maps_url"] is None
     assert out["location"] is None
 
 
@@ -170,6 +173,7 @@ def test_search_restaurants_sends_taiwan_context_and_formats_results(monkeypatch
                 "price_level": None,
                 "type": None,
                 "open_now": None,
+                "maps_url": None,
                 "location": None,
             }
         ]

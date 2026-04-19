@@ -12,6 +12,10 @@ Usage:
 
 import os
 import sys
+from pathlib import Path
+
+# Make the project root importable when this file is run directly.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from dotenv import load_dotenv
 

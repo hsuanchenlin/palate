@@ -7,7 +7,7 @@ PLACES_BASE = "https://places.googleapis.com/v1"
 SEARCH_FIELDS = (
     "places.id,places.displayName,places.formattedAddress,places.rating,"
     "places.userRatingCount,places.priceLevel,places.primaryType,"
-    "places.currentOpeningHours.openNow,places.location"
+    "places.currentOpeningHours.openNow,places.location,places.googleMapsUri"
 )
 
 DETAILS_FIELDS = (
@@ -90,6 +90,7 @@ def _format_place(p: dict) -> dict:
         "price_level": p.get("priceLevel"),
         "type": p.get("primaryType"),
         "open_now": (p.get("currentOpeningHours") or {}).get("openNow"),
+        "maps_url": p.get("googleMapsUri"),
         "location": p.get("location"),
     }
 
