@@ -130,6 +130,28 @@ OpenRouter's free tier is rate-limited per upstream provider. If you hit a 429,
 either retry after a few seconds or switch models in the sidebar. For rate-limit-free
 iteration, use Ollama locally.
 
+## Testing
+
+```bash
+uv run pytest                # unit tests (fast, no network)
+uv run pytest -m live        # live integration — hits Places + OpenRouter, needs .env
+uv run pytest --cov=palate   # (if you add pytest-cov)
+```
+
+There's also a streaming manual probe:
+
+```bash
+uv run python scripts/e2e.py
+uv run python scripts/e2e.py "台北大安區好吃的牛肉麵"
+```
+
+```
+tests/
+├── test_tools.py        # pure functions + respx-mocked HTTP
+├── test_agent.py        # scripted ScriptedBackend drives the loop
+└── test_integration.py  # @pytest.mark.live; auto-skips if keys absent or 429
+```
+
 ## Roadmap
 
 - **Phase 1** ✅ agent loop + 2 tools + chat UI

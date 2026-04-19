@@ -130,6 +130,28 @@ uv run streamlit run app.py
 OpenRouter 免費版會被上游供應商限速。碰到 429 時，等幾秒再試，或在側欄切換模型。
 想要零速率限制的話，直接用本機 Ollama 最舒服。
 
+## 測試
+
+```bash
+uv run pytest                # 單元測試（快速，不連網路）
+uv run pytest -m live        # 實際連 Places + OpenRouter，需要 .env
+uv run pytest --cov=palate   # 搭配 pytest-cov 可看覆蓋率
+```
+
+另外有一個手動串流測試腳本：
+
+```bash
+uv run python scripts/e2e.py
+uv run python scripts/e2e.py "台北大安區好吃的牛肉麵"
+```
+
+```
+tests/
+├── test_tools.py        # 純函式 + respx mock HTTP
+├── test_agent.py        # ScriptedBackend 驅動 agent 迴圈
+└── test_integration.py  # @pytest.mark.live；金鑰沒設或 429 時自動 skip
+```
+
 ## Roadmap
 
 - **Phase 1** ✅ Agent 迴圈 + 2 個工具 + 聊天 UI
