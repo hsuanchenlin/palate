@@ -126,9 +126,11 @@ Free-tier models worth trying (all support tool calls):
 - `qwen/qwen3-next-80b-a3b-instruct:free`
 - `nvidia/nemotron-nano-9b-v2:free` *(smallest, fastest)*
 
-OpenRouter's free tier is rate-limited per upstream provider. If you hit a 429,
-either retry after a few seconds or switch models in the sidebar. For rate-limit-free
-iteration, use Ollama locally.
+OpenRouter's free tier is rate-limited per upstream provider. Palate handles this
+automatically: when the selected model returns 429 or 503, the backend retries down a
+built-in chain of tool-capable free models (`DEFAULT_FALLBACK_MODELS` in `palate/llm.py`)
+and the UI notes which model actually answered. Pass `fallback_models=[]` to disable,
+or a custom list to override. For zero rate-limits, use Ollama locally.
 
 ## Testing
 

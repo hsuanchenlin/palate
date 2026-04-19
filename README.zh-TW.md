@@ -127,8 +127,10 @@ uv run streamlit run app.py
 - `qwen/qwen3-next-80b-a3b-instruct:free`
 - `nvidia/nemotron-nano-9b-v2:free` *（最小、最快）*
 
-OpenRouter 免費版會被上游供應商限速。碰到 429 時，等幾秒再試，或在側欄切換模型。
-想要零速率限制的話，直接用本機 Ollama 最舒服。
+OpenRouter 免費版會被上游供應商限速。Palate 會自動處理：選定的模型若回 429 或 503，
+後端會沿著內建的 tool-call 相容免費模型清單（`palate/llm.py` 裡的 `DEFAULT_FALLBACK_MODELS`）
+逐一 retry，UI 會顯示實際回答的是哪個模型。傳 `fallback_models=[]` 可以關掉，或自訂
+清單。想要零限速，就用本機 Ollama。
 
 ## 測試
 

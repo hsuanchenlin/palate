@@ -112,5 +112,15 @@ if prompt:
                     if msg.content and not msg.tool_calls:
                         with st.chat_message("assistant"):
                             st.markdown(msg.content)
+                            actual = getattr(backend, "last_used_model", None)
+                            if actual and actual != model:
+                                st.caption(f"⚠️ {model} was rate-limited; answered with `{actual}`")
         except Exception as e:
-            st.error(f"Agent error: {type(e).__name__}: {e}")
+            msg = str(e)
+            if "429" in msg or "rate-limited" in msg.lower():
+                st.error(
+                    f"All fallback models are rate-limited right now. "
+                    f"Try again in a minute, switch to Ollama, or add a paid OpenRouter key.\n\n{type(e).__name__}: {msg}"
+                )
+            else:
+                st.error(f"Agent error: {type(e).__name__}: {e}")
