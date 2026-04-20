@@ -132,6 +132,19 @@ built-in chain of tool-capable free models (`DEFAULT_FALLBACK_MODELS` in `palate
 and the UI notes which model actually answered. Pass `fallback_models=[]` to disable,
 or a custom list to override. For zero rate-limits, use Ollama locally.
 
+## Caching
+
+Google Places responses are cached to a local SQLite file to save API quota and
+speed up repeat queries.
+
+- **Location:** `~/.cache/palate/places.sqlite3` (override with `PALATE_CACHE_DIR`)
+- **TTL:** 24 h for `search_restaurants`, 7 d for `get_restaurant_details`
+- **Disable:** set `PALATE_DISABLE_CACHE=1`
+- **Clear:** sidebar button in the Streamlit UI, or `rm -rf ~/.cache/palate`
+
+In tests, the cache is auto-disabled via `tests/conftest.py` so mocked HTTP paths
+stay exercised.
+
 ## Testing
 
 ```bash

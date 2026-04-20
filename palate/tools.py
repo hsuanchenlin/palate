@@ -2,6 +2,8 @@ import os
 
 import httpx
 
+from palate.cache import get_default as _get_cache
+
 PLACES_BASE = "https://places.googleapis.com/v1"
 
 SEARCH_FIELDS = (
@@ -45,6 +47,18 @@ def search_restaurants(
     max_results: int = 10,
 ) -> dict:
     """Text search for restaurants in Taiwan via Google Places API v1."""
+    cache_args = {
+        "query": query,
+        "region": region,
+        "min_rating": min_rating,
+        "open_now": open_now,
+        "max_results": max_results,
+    }
+    cache = _get_cache()
+    hit = cache.get("search_restaurants", cache_args)
+    if hit is not None:
+        return hit
+
     body: dict = {
         "textQuery": f"{query} in {region}",
         "includedType": "restaurant",
@@ -65,11 +79,19 @@ def search_restaurants(
     r = httpx.post(f"{PLACES_BASE}/places:searchText", json=body, headers=headers, timeout=20)
     _check(r)
     data = r.json()
-    return {"results": [_format_place(p) for p in data.get("places", [])]}
+    result = {"results": [_format_place(p) for p in data.get("places", [])]}
+    cache.put("search_restaurants", cache_args, result)
+    return result
 
 
 def get_restaurant_details(place_id: str) -> dict:
     """Fetch detailed info for one place, including reviews and hours."""
+    cache_args = {"place_id": place_id}
+    cache = _get_cache()
+    hit = cache.get("get_restaurant_details", cache_args)
+    if hit is not None:
+        return hit
+
     headers = {
         "X-Goog-Api-Key": _api_key(),
         "X-Goog-FieldMask": DETAILS_FIELDS,
@@ -77,7 +99,9 @@ def get_restaurant_details(place_id: str) -> dict:
     params = {"languageCode": "zh-TW"}
     r = httpx.get(f"{PLACES_BASE}/places/{place_id}", headers=headers, params=params, timeout=20)
     _check(r)
-    return _format_details(r.json())
+    result = _format_details(r.json())
+    cache.put("get_restaurant_details", cache_args, result)
+    return result
 
 
 def _format_place(p: dict) -> dict:

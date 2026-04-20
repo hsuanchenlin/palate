@@ -5,6 +5,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from palate.agent import Agent
+from palate.cache import get_default as get_places_cache
 from palate.llm import OllamaBackend, OpenRouterBackend, available_ollama_models
 
 load_dotenv()
@@ -41,6 +42,21 @@ with st.sidebar:
     if st.button("Reset conversation", use_container_width=True):
         st.session_state.pop("messages", None)
         st.rerun()
+
+    st.divider()
+    st.header("Places cache")
+    cache_stats = get_places_cache().stats()
+    if cache_stats.get("disabled"):
+        st.caption("Disabled (PALATE_DISABLE_CACHE=1)")
+    else:
+        st.caption(f"{cache_stats['total']} entries ({cache_stats['expired']} expired)")
+        by_fn = cache_stats.get("by_fn") or {}
+        if by_fn:
+            st.caption(" · ".join(f"{k}: {v}" for k, v in by_fn.items()))
+        if st.button("Clear cache", use_container_width=True):
+            n = get_places_cache().clear()
+            st.toast(f"Cleared {n} cached entries")
+            st.rerun()
 
 
 if "messages" not in st.session_state:
